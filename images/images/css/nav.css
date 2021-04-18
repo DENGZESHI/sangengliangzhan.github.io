@@ -1,0 +1,59 @@
+#app .nav {
+  width: 100%;
+  height: 50px;
+  background: linear-gradient(to Right, rgb(194, 220, 217), rgb(18, 143, 197));
+  position: fixed;
+  top: 0;
+}
+
+.lc {
+  display: inline-block;
+  width: 25%;
+  position: absolute;
+  left: 0;
+  height: 50px;
+  text-align: center;
+  line-height: 50px;
+  font-size: 20px;
+  font-size: 17px;
+  color: rgb(59, 156, 207);
+  font-family: "华文琥珀";
+  transition-property: left;
+  transition-duration: 1s;
+  white-space: nowrap;
+}
+
+.search {
+  position: absolute;
+  left: 25%;
+  width: 70%;
+  height: 40px;
+  margin: 3px auto;
+  line-height: 40px;
+  border-radius: 20px;
+  font-size: 15px;
+  outline: none;
+  border: none;
+  color: rgb(59, 156, 207);
+  background-color: rgb(214, 206, 206);
+  text-indent: 2em;
+  transition-property: left;
+  transition-duration: 1s;
+}
+.nav input::placeholder {
+  color: rgb(59, 156, 207);
+}
+.span_history {
+  position: absolute;
+  z-index: -1;
+  right: 50%;
+  width: 20%;
+  text-align: center;
+  line-height: 40px;
+  height: 40px;
+  margin-top: 3px;
+  border-radius: 50px;
+  background-color: rgb(214, 206, 206);
+  transition-property: right;
+  transition-duration: 1s;
+}
