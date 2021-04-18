@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>潦草音乐</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/nav.css">
+    <link rel="stylesheet" href="css/content.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="css/htmleaf-demo.css">
+    <link rel="stylesheet" href="css/add-class.css">
+</head>
+
+<body>
+    <div id="app">
+        <div class="nav" :style="navBackgroundColor[x]">
+            <span v-cloak :class="{lc:true,add_lc:liaocaoTrue}" class="lc" :style="color[x]" >潦草音乐</span>
+            <input class="search" type="text" name="" v-model="query"  @keyup.enter="searchMusic(),liaocaoTrue=false,blur(),recordIt(),num=0,isTrue=false" @focus="liaocaoTrue=true" :class="{search:true,add_input:liaocaoTrue}"  :style="color[x]" placeholder="请输入你想听的音乐">
+            <span v-cloak  :style="color[x]" class="span_history" :class="{span_history:true,add_span_history:liaocaoTrue}"   @click="liaocaoTrue=false">取消</span>
+        </div>
+        <div class="content" >
+            <div v-cloak class="c_history" v-show="liaocaoTrue">
+                <h4>历史记录</h4>
+                <span @click="removeAllHistory()">清空历史记录</span>
+                <ol v-cloak class="c_ol" >
+                    <li  v-for="(item,index) in historyArrs" @click="changeSong(item.title),isTrue=false,liaocaoTrue=false,num=0,recordIt()">{{item.title}}
+                        <a @click="removeHistory(index)" @click.stop="changeSong()" href="#">x</a>
+                    </li>
+                </ol>
+            </div>
+            <img  :src="imgUrl[x]"  class="c_div "   alt="">
+            <div v-cloak  v-show="num==0" class="left c_div">
+                <div class="welcome" v-show="isTrue"  :style="border[x]">
+                    <div  class="t_b">
+                        <span class="span1">又迎来了新的一天啦~</span>
+                        <span class="span2">祝福所有热衷听歌的小伙伴天天开心、快乐~</span>
+                        <span  class="span3">试试听听&nbsp;<p @click="changeSong(shareMusic[randomX]),isTrue=false,recordIt()" class="p1">{{shareMusic[randomX]}}</p>&nbsp;这首歌吧~</span>
+                        <span class="span4">愿世间美好与你环环相扣~</span>
+                        <span class="span5">一起走进音乐世界吧~</span>
+                    </div>
+                </div>
+                <ul>
+                    <li v-cloak v-for="item in musicList">
+                        <a :style="color[x]" href="javascript:;" @click="playMusic(item.id,item.name,item),num=1,play_pause()">{{item.name}}</a>
+                        <div class="list_div">
+                           <p :style="color[x]">---</p> <span :style="color[x]" class="list_span" v-for="people in item.artists">{{people.name}}、</span>
+                        </div>
+                    </li>
+                </ul>    
+            </div>
+            <div v-cloak v-show="num==1" class="center c_div"><!--播放-->
+                <div class="slider_bar">
+                    <span class="s_span1" @click="recordLike()"></span> <!--喜欢-->
+                    <span class="s_span2" @click="downloadFile()"></span> <!--下载-->
+                </div>
+                <div :style="footerBackgroundColor[x]" class="songName">{{fileName}}</div> <!--歌曲名-->
+                <div :style="color[x]" class="circle"> <!--作者图片-->
+                    <img  :src="picUrl" alt="">    
+                    
+                </div>
+                <div  class="center_2"></div> <!--歌词-->
+                <div class="play">
+                    <ul class="p_ul" :style="footerBackgroundColor[x]">
+                        <li class="p_bar">
+                            <span  class="time_start">{{musicCurrentTime}}</span>
+                                <div @touchstart="touchstart" class="p_div1">
+                                    <div class="p_div2"></div>
+                                </div><!-- 进度条 -->
+                            
+                            <span class="time_end">{{musicSumTime}}</span>
+                        </li>
+                       <!--循环样式--> 
+                       <li class="p_li1"><span class="li_span1" @click="playStyle(),playStyleFunction()" ><img :src="playStyleNullImg[playStyleNull]" alt=""></span></li>
+                        <li class="p_li2"><span class="li_span2"></span></li>
+                        <li class="p_li3"><span class="li_span3"  @click="pp()"></span></li>
+                        <li class="p_li4"><span class="li_span4"></span></li>
+                        <li class="p_li5"><span class="li_span5"></span></li>
+                    </ul>
+                </div>
+            </div>
+            <div v-cloak v-show="num==2" class="message c_div"><!--评论-->
+                <span :style="color[x]" class="m_span">热门评论:</span>
+                <ul class="m_ul">
+                    <li v-for="(item,index) in hotCommentsArr">
+                        <div class="m_ul_div">
+                            <img :src="item.user.avatarUrl" class="m_ul_img"> 
+                            <span :style="color[x]" class="m_ul_span2">{{userName[index]}}</span>
+                        </div>
+                        <span  class="m_ul_span3">{{item.content}}</span>
+                        
+                    </li>
+                  
+                </ul>
+            </div>
+            <!--收藏-->
+            <div v-cloak v-show="num==3" class="my c_div">
+                <span :style="color[x]" class="m_span1">收藏列表:&emsp;{{likeMusic.length}}&nbsp;首喜欢
+                     <p class="m_p" @click="operationTrue=!operationTrue">操作</p>
+                </span>
+                <ul>
+                    <li v-cloak v-for="(item,index) in likeMusic">
+                        <div class="like_div1">
+                            <span class="like_span1" :class="{like_span1:true,add_like_span1:operationTrue}" @click="removeLikeMusic(index)">x</span>
+                            <a :style="color[x]" href="javascript:;" @click="playMusic(item.like.id,item.like.name),num=1,play_pause()">{{item.like.name}}</a>
+                        </div>
+                        <div class="like_div2">
+                           <p :style="color[x]">---</p> <span :style="color[x]" class="like_span2" v-for="people in item.like.artists">{{people.name}}、</span>
+                        </div>
+                    </li>
+                </ul>    
+            </div>
+        </div>
+ <!-- <span class="span">开始/暂停</span>
+            <span class="time">00/00</span>
+            <div></div>
+            <p>音量</p> -->
+        <div>
+            <audio  class="a_autoplay" :src="musicUrl"  autoplay ></audio>
+        </div>
+        <div class="footer" >
+           <ul :style="footerBackgroundColor[x]">
+                <li class="footer_li" @click="num=0,liaocaoTrue=false" :class="{footer_li:true,add_footer:num==0}" :style="border[x]">发现</li>
+                <li class="footer_li"  @click="num=1,liaocaoTrue=false" :class="{footer_li:true,add_footer:num==1}"  :style="border[x]">歌曲</li>
+                <li class="footer_li"  @click="num=2,liaocaoTrue=false" :class="{footer_li:true,add_footer:num==2}" class="f_message" :style="border[x]">评论</li>
+                <li class="footer_li"  @click="num=3,liaocaoTrue=false" :class="{footer_li:true,add_footer:num==3}" :style="border[x]">收藏</li>
+            </ul>
+        </div>
+    </div>
+    <!--官网提供的axios在线地址-->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
+    <script src="js/vue.js"></script>
+    <script src="js/all.js"></script>
+    <script src="js/style.js"></script>
+    <script src="js/emojiCursor.js" type="text/javascript"></script>  
+</body>
+
+</html>

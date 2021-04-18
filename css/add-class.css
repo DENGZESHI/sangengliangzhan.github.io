@@ -1,0 +1,22 @@
+.add_input {
+  left: 5px;
+}
+.add_footer {
+  font-size: 24px;
+  font-weight: bold;
+  font-family: "宋体";
+}
+.add_span_history {
+  right: 15px;
+}
+/* filter: blur(10px); */
+.add_lc {
+  left: -100px;
+  overflow: hidden;
+}
+.add_span_sum {
+  display: block;
+}
+.add_like_span1 {
+  display: none;
+}
